@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="generator" content="Docutils 0.14: http://docutils.sourceforge.net/" />
+<title>Notes.rst</title>
+<style type="text/css">
+
+/* Minimal style sheet for the HTML output of Docutils.                    */
+/*                                                                         */
+/* :Author: Günter Milde, based on html4css1.css by David Goodger          */
+/* :Id: $Id: minimal.css 8036 2017-02-14 13:05:46Z milde $               */
+/* :Copyright: © 2015 Günter Milde.                                        */
+/* :License: Released under the terms of the `2-Clause BSD license`_,      */
+/*    in short:                                                            */
+/*                                                                         */
+/*    Copying and distribution of this file, with or without modification, */
+/*    are permitted in any medium without royalty provided the copyright   */
+/*    notice and this notice are preserved.                                */
+/*                                                                         */
+/*    This file is offered as-is, without any warranty.                    */
+/*                                                                         */
+/* .. _2-Clause BSD license: http://www.spdx.org/licenses/BSD-2-Clause     */
+
+/* This CSS2.1_ stylesheet defines rules for Docutils elements without    */
+/* HTML equivalent. It is required to make the document semantic visible. */
+/*                                                                        */
+/* .. _CSS2.1: http://www.w3.org/TR/CSS2                                  */
+/* .. _validates: http://jigsaw.w3.org/css-validator/validator$link       */
+
+/* alignment of text and inline objects inside block objects*/
+.align-left   { text-align: left; }
+.align-right  { text-align: right; }
+.align-center { clear: both; text-align: center; }
+.align-top    { vertical-align: top; }
+.align-middle { vertical-align: middle; }
+.align-bottom { vertical-align: bottom; }
+
+/* titles */
+h1.title, p.subtitle {
+  text-align: center;
+}
+p.admonition-title,
+p.topic-title,
+p.sidebar-title,
+p.rubric,
+p.system-message-title {
+  font-weight: bold;
+}
+h1 + p.subtitle,
+h1 + p.section-subtitle {
+  font-size: 1.6em;
+}
+h2 + p.section-subtitle { font-size: 1.28em; }
+p.subtitle,
+p.section-subtitle,
+p.sidebar-subtitle {
+  font-weight: bold;
+  margin-top: -0.5em;
+}
+p.sidebar-title,
+p.rubric {
+  font-size: larger;
+}
+p.rubric { color: maroon; }
+a.toc-backref {
+  color: black;
+  text-decoration: none; }
+
+/* Warnings, Errors */
+div.caution p.admonition-title,
+div.attention p.admonition-title,
+div.danger p.admonition-title,
+div.error p.admonition-title,
+div.warning p.admonition-title,
+div.system-messages h1,
+div.error,
+span.problematic,
+p.system-message-title {
+  color: red;
+}
+
+/* inline literals */
+span.docutils.literal {
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+/* do not wraph at hyphens and similar: */
+.literal > span.pre { white-space: nowrap; }
+
+/* Lists */
+
+/* compact and simple lists: no margin between items */
+.simple  li, .compact li,
+.simple  ul, .compact ul,
+.simple  ol, .compact ol,
+.simple > li p, .compact > li p,
+dl.simple > dd, dl.compact > dd {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Table of Contents */
+div.topic.contents { margin: 0; }
+ul.auto-toc {
+  list-style-type: none;
+  padding-left: 1.5em; }
+
+/* Enumerated Lists */
+ol.arabic     { list-style: decimal }
+ol.loweralpha { list-style: lower-alpha }
+ol.upperalpha { list-style: upper-alpha }
+ol.lowerroman { list-style: lower-roman }
+ol.upperroman { list-style: upper-roman }
+
+dt span.classifier { font-style: italic }
+dt span.classifier:before {
+  font-style: normal;
+  margin: 0.5em;
+  content: ":";
+}
+
+/* Field Lists and drivatives */
+/* bold field name, content starts on the same line */
+dl.field-list > dt,
+dl.option-list > dt,
+dl.docinfo > dt,
+dl.footnote > dt,
+dl.citation > dt {
+  font-weight: bold;
+  clear: left;
+  float: left;
+  margin: 0;
+  padding: 0;
+  padding-right: 0.5em;
+}
+/* Offset for field content (corresponds to the --field-name-limit option) */
+dl.field-list > dd,
+dl.option-list > dd,
+dl.docinfo > dd {
+  margin-left:  9em; /* ca. 14 chars in the test examples */
+}
+/* start field-body on a new line after long field names */
+dl.field-list > dd > *:first-child,
+dl.option-list > dd > *:first-child
+{
+  display: inline-block;
+  width: 100%;
+  margin: 0;
+}
+/* field names followed by a colon */
+dl.field-list > dt:after,
+dl.docinfo > dt:after {
+  content: ":";
+}
+
+/* Bibliographic Fields (docinfo) */
+pre.address { font: inherit; }
+dd.authors > p { margin: 0; }
+
+/* Option Lists */
+dl.option-list { margin-left: 40px; }
+dl.option-list > dt { font-weight: normal; }
+span.option { white-space: nowrap; }
+
+/* Footnotes and Citations  */
+dl.footnote.superscript > dd {margin-left: 1em; }
+dl.footnote.brackets > dd {margin-left: 2em; }
+dl > dt.label { font-weight: normal; }
+a.footnote-reference.brackets:before,
+dt.label > span.brackets:before { content: "["; }
+a.footnote-reference.brackets:after,
+dt.label > span.brackets:after { content: "]"; }
+a.footnote-reference.superscript,
+dl.footnote.superscript > dt.label {
+  vertical-align: super;
+  font-size: smaller;
+}
+dt.label > span.fn-backref { margin-left: 0.2em; }
+dt.label > span.fn-backref > a { font-style: italic; }
+
+/* Line Blocks */
+div.line-block { display: block; }
+div.line-block div.line-block {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 40px;
+}
+
+/* Figures, Images, and Tables */
+.figure.align-left,
+img.align-left,
+object.align-left,
+table.align-left {
+  margin-right: auto;
+}
+.figure.align-center,
+img.align-center,
+object.align-center {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+.figure.align-right,
+img.align-right,
+object.align-right,
+table.align-right {
+  margin-left: auto;
+}
+/* reset inner alignment in figures and tables */
+/* div.align-left, div.align-center, div.align-right, */
+table.align-left, table.align-center, table.align-right
+{ text-align: inherit }
+
+/* Admonitions and System Messages */
+div.admonition,
+div.system-message,
+div.sidebar{
+  margin: 40px;
+  border: medium outset;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+/* Sidebar */
+div.sidebar {
+  width: 30%;
+  max-width: 26em;
+  float: right;
+  clear: right;
+}
+
+/* Text Blocks */
+div.topic,
+pre.literal-block,
+pre.doctest-block,
+pre.math,
+pre.code {
+  margin-right: 40px;
+  margin-left: 40px;
+}
+pre.code .ln { color: gray; } /* line numbers */
+
+/* Tables */
+table { border-collapse: collapse; }
+td, th {
+  border-style: solid;
+  border-color: silver;
+  padding: 0 1ex;
+  border-width: thin;
+}
+td > p:first-child, th > p:first-child { margin-top: 0; }
+td > p, th > p { margin-bottom: 0; }
+
+table > caption {
+  text-align: left;
+  margin-bottom: 0.25em
+}
+
+table.borderless td, table.borderless th {
+  border: 0;
+  padding: 0;
+  padding-right: 0.5em /* separate table cells */
+}
+
+</style>
+<style type="text/css">
+
+/* CSS31_ style sheet for the output of Docutils HTML writers.             */
+/* Rules for easy reading and pre-defined style variants.		   */
+/*                                                                         */
+/* :Author: Günter Milde, based on html4css1.css by David Goodger          */
+/* :Id: $Id: plain.css 8120 2017-06-22 21:02:40Z milde $               */
+/* :Copyright: © 2015 Günter Milde.                                        */
+/* :License: Released under the terms of the `2-Clause BSD license`_,      */
+/*    in short:                                                            */
+/*                                                                         */
+/*    Copying and distribution of this file, with or without modification, */
+/*    are permitted in any medium without royalty provided the copyright   */
+/*    notice and this notice are preserved.                                */
+/*    	     	      	     	 					   */
+/*    This file is offered as-is, without any warranty.                    */
+/*                                                                         */
+/* .. _2-Clause BSD license: http://www.spdx.org/licenses/BSD-2-Clause     */
+/* .. _CSS3: http://www.w3.org/TR/CSS3		        		   */
+
+
+/* Document Structure */
+/* ****************** */
+
+/* "page layout" */
+body {
+  padding: 0 5%;
+  margin: 8px 0;
+}
+div.document {
+  line-height:1.3;
+  counter-reset: table;
+  /* counter-reset: figure; */
+  /* avoid long lines --> better reading */
+  /* OTOH: lines should not be too short because of missing hyphenation, */
+  max-width: 50em;
+  margin: auto;
+}
+
+/* Sections */
+
+/* Transitions */
+
+hr.docutils {
+  width: 80%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  clear: both;
+}
+
+/* Paragraphs               */
+/* ==========               */
+
+/* vertical space (parskip) */
+p, ol, ul, dl,
+div.line-block,
+table{
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+h1, h2, h3, h4, h5, h6,
+dl > dd {
+  margin-bottom: 0.5em;
+}
+
+/* Lists                    */
+/* ==========               */
+
+/* Definition Lists         */
+
+dl > dd > p:first-child { margin-top: 0; }
+/* :last-child is not part of CSS 2.1 (introduced in CSS 3) */
+dl > dd > p:last-child  { margin-bottom: 0; }
+
+/* lists nested in definition lists */
+/* :only-child is not part of CSS 2.1 (introduced in CSS 3) */
+dd > ul:only-child, dd > ol:only-child { padding-left: 1em; }
+
+/* Description Lists */
+/* styled like in most dictionaries, encyclopedias etc. */
+dl.description > dt {
+  font-weight: bold;
+  clear: left;
+  float: left;
+  margin: 0;
+  padding: 0;
+  padding-right: 0.5em;
+}
+
+/* Field Lists */
+
+/* example for custom field-name width */
+dl.field-list.narrow > dd {
+  margin-left: 5em;
+}
+/* run-in: start field-body on same line after long field names */
+dl.field-list.run-in > dd p {
+  display: block;
+}
+
+/* Bibliographic Fields */
+
+/* generally, bibliographic fields use special definition list dl.docinfo */
+/* but dedication and abstract are placed into "topic" divs */
+div.abstract p.topic-title {
+  text-align: center;
+}
+div.dedication {
+  margin: 2em 5em;
+  text-align: center;
+  font-style: italic;
+}
+div.dedication p.topic-title {
+  font-style: normal;
+}
+
+/* Citations */
+dl.citation dt.label {
+  font-weight: bold;
+}
+span.fn-backref {
+  font-weight: normal;
+}
+
+/* Text Blocks           */
+/* ============          */
+
+/* Literal Blocks           */
+pre.literal-block, pre.doctest-block,
+pre.math, pre.code {
+  margin-left: 1.5em;
+  margin-right: 1.5em
+}
+
+/* Block Quotes             */
+
+blockquote,
+div.topic {
+  margin-left: 1.5em;
+  margin-right: 1.5em
+}
+blockquote > table,
+div.topic > table {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+blockquote p.attribution,
+div.topic p.attribution {
+  text-align: right;
+  margin-left: 20%;
+}
+
+/* Tables                   */
+/* ======                   */
+
+/* th { vertical-align: bottom; } */
+
+table tr { text-align: left; }
+
+/* "booktabs" style (no vertical lines) */
+table.booktabs {
+  border: 0;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.booktabs * {
+  border: 0;
+}
+table.booktabs th {
+  border-bottom: thin solid;
+}
+
+/* numbered tables (counter defined in div.document) */
+table.numbered > caption:before {
+  counter-increment: table;
+  content: "Table " counter(table) ": ";
+  font-weight: bold;
+}
+
+/* Explicit Markup Blocks   */
+/* ======================   */
+
+/* Footnotes and Citations  */
+/* -----------------------  */
+
+/* line on the left */
+dl.footnote {
+  padding-left: 1ex;
+  border-left: solid;
+  border-left-width: thin;
+}
+
+/* Directives               */
+/* ----------               */
+
+/* Body Elements            */
+/* ~~~~~~~~~~~~~            */
+
+/* Images and Figures */
+
+/* let content flow to the side of aligned images and figures */
+.figure.align-left,
+img.align-left,
+object.align-left {
+  display: block;
+  clear: left;
+  float: left;
+  margin-right: 1em
+}
+.figure.align-right,
+img.align-right,
+object.align-right {
+  display: block;
+  clear: right;
+  float: right;
+  margin-left: 1em
+}
+/* Stop floating sidebars, images and figures at section level 1,2,3 */
+h1, h2, h3 { clear: both; }
+
+/* Sidebar */
+
+/* Move into the margin. In a layout with fixed margins, */
+/* it can be moved into the margin completely.		 */
+div.sidebar {
+  width: 30%;
+  max-width: 26em;
+  margin-left: 1em;
+  margin-right: -5.5%;
+  background-color: #ffffee ;
+}
+
+/* Code                     */
+
+pre.code, code { background-color: #eeeeee }
+pre.code .ln { color: gray; } /* line numbers */
+/* basic highlighting: for a complete scheme, see */
+/* http://docutils.sourceforge.net/sandbox/stylesheets/ */
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+/* Math                     */
+/* styled separately (see math.css for math-output=HTML) */
+
+/* Epigraph                 */
+/* Highlights               */
+/* Pull-Quote               */
+/* Compound Paragraph       */
+/* Container                */
+
+/* can be styled in a custom stylesheet */
+
+/* Document Header and Footer */
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller;
+}
+
+/* Inline Markup            */
+/* =============            */
+
+/* Emphasis                 */
+/*   em                     */
+/* Strong Emphasis          */
+/*   strong		    */
+/* Interpreted Text         */
+/*   span.interpreted  	    */
+/* Title Reference 	    */
+/*   cite		    */
+/* Inline Literals          */
+/* possible values: normal, nowrap, pre, pre-wrap, pre-line */
+/*   span.docutils.literal { white-space: pre-wrap; } */
+
+/* Hyperlink References     */
+a { text-decoration: none; }
+
+/* External Targets         */
+/*   span.target.external   */
+/* Internal Targets  	    */
+/*   span.target.internal   */
+/* Footnote References      */
+/*   a.footnote-reference   */
+/* Citation References      */
+/*   a.citation-reference   */
+
+</style>
+</head>
+<body>
+<div class="document">
+
+
+<div class="section" id="tresc">
+<h1>Treść</h1>
+<p><strong>Bazy Danych 2017 – Projekt Zaliczeniowy</strong></p>
+<p>W ramach projektu ma powstać baza danych do analizy logów serwera WWW. Program ma umożliwiać wczytanie tekstowego pliku logu do tabel bazodanowych zaprojektowanych w modelu relacyjnym. Załadowane z logu informacje powinny być następnie udostępnione do analizy przez stworzony na użytek projektu interfejs użytkownika. Baza danych powinna zostać zaimplementowana na serwerze Oracle. Interfejs może być zrealizowany w PHP lub w innym języku umożliwiającym łączenie się z bazą danych Oracle. Część przetwarzania powinna zostać umieszczona na serwerze danych – w postaci kodu PL/SQL.</p>
+<p>Proces ładowania logu może być dostępny z interfejsu użytkownika lub jako funkcja uruchamiana wsadowo. Należy rozważyć i rozwiązać problemy związane z ładowaniem kolejnych logów lub ponownym ładowaniem tego samego pliku.</p>
+<p>Program pracy nad projektem:</p>
+<blockquote>
+<ul class="simple">
+<li><p>Przygotowanie projektu bazy danych ERD – chciałbym go otrzymać <em>przed 15.01.2018</em>.</p></li>
+<li><p>Przygotowanie listy funkcji realizowanych przez interfejs – w szczególności listy analiz ruchu WWW, który będzie przez niego dostępny. Chciałbym zobaczyć takie listy 18.01.2018.</p></li>
+<li><p>Przedstawienie działającego programu – do końca sesji zimowej.</p></li>
+</ul>
+</blockquote>
+<dl class="simple">
+<dt>Materiały dodatkowe:</dt>
+<dd><ul class="simple">
+<li><p>Przykładowy <a class="reference external" href="http://students.mimuw.edu.pl/~kuchar/BD/Projekt/przyklad_access_log.txt.gz">plik logu</a> z apache’a</p></li>
+<li><p><a class="reference external" href="http://httpd.apache.org/docs/2.2/logs.html">Dokumentacja apache’a</a> – format pliku access.log</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="access-log-by-default">
+<h1>Access log by default</h1>
+<p>Config:</p>
+<pre class="code literal-block"><code>LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b&quot; common
+CustomLog logs/access_log common</code></pre>
+<p>Example:</p>
+<pre class="code literal-block"><code>127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] &quot;GET /apache_pb.gif HTTP/1.0&quot; 200 2326
+188.165.15.55 - - [18/Jan/2015:05:02:09 +0100] &quot;GET /~matmis/BAR/story.php?faza=%201261176032 HTTP/1.1&quot; 200 1603
+189.226.180.177 - - [18/Jan/2015:05:02:06 +0100] &quot;GET /%7Eparys/polskateaparty/ptp/viewforum.php?f=1 HTTP/1.0&quot; 200 11554
+100.43.81.139 - - [18/Jan/2015:05:02:08 +0100] &quot;GET /~urzy/Pmat/2011-12/Domowe/pracadom1utf.pdf HTTP/1.1&quot; 200 60778
+78.8.135.6 - - [18/Jan/2015:05:02:12 +0100] &quot;GET /favicon.ico HTTP/1.1&quot; 302 291
+207.46.13.20 - - [18/Jan/2015:05:02:12 +0100] &quot;GET /batory/Kurs3/lunar_jelly.jpg HTTP/1.1&quot; 200 8975
+78.8.135.6 - - [18/Jan/2015:05:02:13 +0100] &quot;GET /favicon.ico HTTP/1.1&quot; 404 2985
+68.180.228.235 - - [18/Jan/2015:05:02:14 +0100] &quot;GET /~onufry/hiena/data/cache/9/9b29800faf34ade6f380625b43f5124f.i HTTP/1.1&quot; 200 1580
+207.46.13.20 - - [18/Jan/2015:05:02:14 +0100] &quot;GET /~szymtor/ HTTP/1.1&quot; 200 4882
+189.226.180.177 - - [18/Jan/2015:05:02:17 +0100] &quot;GET /%7Eparys/polskateaparty/ptp/viewforum.php?f=2 HTTP/1.0&quot; 200 17713
+157.55.39.183 - - [18/Jan/2015:05:02:17 +0100] &quot;GET /~shummel/szczepan.jpg HTTP/1.1&quot; 200 70510</code></pre>
+<p>Ciekawe formaty:</p>
+<blockquote>
+<dl class="simple">
+<dt>%h</dt>
+<dd><p>Remote host</p>
+</dd>
+<dt>%H</dt>
+<dd><p>Request protocol</p>
+</dd>
+<dt>%r</dt>
+<dd><p>First request line</p>
+</dd>
+<dt>%[&gt;]s</dt>
+<dd><p>Status (generalnie status pierwszej odpowiedzi, bez przekierowań; %s oznacza ostatni status)</p>
+</dd>
+<dt>%b</dt>
+<dd><p>Rozmiar bez nagłówków (- oznacza 0)</p>
+</dd>
+<dt>%B</dt>
+<dd><p>Rozmiar z nagłówkami</p>
+</dd>
+<dt>%A</dt>
+<dd><p>Local IP address</p>
+</dd>
+<dt>%{format}t</dt>
+<dd><p>Czas; można podać format jak w strftime</p>
+</dd>
+<dt>%D / %T / {unit}T</dt>
+<dd><p>Time to serve in microseconds / miliseconds / podanej jednostce (us/ms/s)</p>
+</dd>
+<dt>%m</dt>
+<dd><p>Metoda</p>
+</dd>
+<dt>%R</dt>
+<dd><p>Handler generating response</p>
+</dd>
+<dt>%U</dt>
+<dd><p>URL path without query string</p>
+</dd>
+<dt>%q</dt>
+<dd><p>The query string (prepended with a ? if a query string exists, otherwise an empty string)</p>
+</dd>
+<dt>%v</dt>
+<dd><p>The canonical ServerName of the server serving the request.</p>
+</dd>
+<dt>%V</dt>
+<dd><p>The server name according to the UseCanonicalName setting.</p>
+</dd>
+</dl>
+</blockquote>
+</div>
+<div class="section" id="robimy">
+<h1>Robimy</h1>
+<p>Co chcemy mieć:</p>
+<blockquote>
+<ul class="simple">
+<li><p>Trzymanie logów z różnych serwerów i zarządzanie tymi serwerami</p></li>
+<li><p>Trzymanie informacji o tym, co się dzieje jak wgrywamy (w sensie przywiązanie wpisów do konkretnej operacji wgrywania logu)</p></li>
+<li><p>Wykrywanie duplikatów przy ładowniu</p></li>
+<li><p>Podawanie jaki ma być format</p></li>
+<li><p>Wyciąganie %m %U %q z %r</p></li>
+<li><p>Zawansowanie wyszukiwanie z możliwościa agregowania sensownych pól</p></li>
+<li><p>Tworzenie filtrów</p></li>
+<li><p>Lista paskud, być może ich grupowanie</p></li>
+<li><p>ładne wykresiki z tych wiltrów i też tworzone w tabelkach <strong>chyba nie</strong></p></li>
+</ul>
+</blockquote>
+<pre class="code literal-block"><code>interface LogEntry {
+    (key id)
+
+    attribute int id;
+
+    attribute int size;
+    attribute string remoteAddress;
+    attribute date time;
+    attribute string handler;
+
+    attribute string request;
+    attribute string protocol;
+    attribute string urlPath;
+    attribute string queryString;
+
+    reference LogFile uploadedFrom;
+}
+
+interface LogFile {
+    (key id)
+
+    attribute int id;
+    attribute date uploadDate;
+    attribute string uploadFormat;
+    attribute int duplicatesSkipped;
+    attribute string note;
+
+    reference Server server;
+}
+
+interface Server {
+    (key name)
+
+    attribute string name;
+    attribute string description;
+    attribute string defaultLogFormat;
+}
+
+
+interface Filter {
+    (key name)
+
+    attribute string name;
+    attribute string queryString;
+}
+
+interface FilterList {
+    (key name)
+
+    attribute string name;
+    attribute Set&lt;string&gt; values;
+}</code></pre>
+</div>
+</div>
+</body>
+</html>

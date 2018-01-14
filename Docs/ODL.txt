@@ -1,0 +1,51 @@
+interface LogEntry {
+    (key id)
+
+    attribute int id;
+    
+    attribute int size;
+    attribute string remoteAddress;
+    attribute date time;
+    attribute int timeToSevre;
+    
+    attribute string request;
+    attribute string urlPath;
+    attribute int status;
+    
+    reference LogFile uploadedFrom;
+}
+
+interface LogFile {
+    (key id)
+
+    attribute int id;
+    attribute date uploadDate;
+    attribute string uploadFormat;
+    attribute int duplicatesSkipped;
+    attribute string comment;
+    
+    reference Server fromServer;
+}
+
+interface Server {
+    (key name)
+
+    attribute string name;
+    attribute string description;
+    attribute string defaultLogFormat;
+}
+
+
+interface Filter {
+    (key name)
+    
+    attribute string name;
+    attribute string queryString;
+}
+
+interface FilterValuesList {
+    (key name)
+    
+    attribute string name;
+    attribute Set<string> values;
+}

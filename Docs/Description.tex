@@ -1,0 +1,172 @@
+\documentclass[a4paper, 10pt]{article}
+\nonstopmode
+\usepackage[margin=1cm, top=2cm, bottom=2cm]{geometry}
+\usepackage{fontspec}
+\usepackage[polish]{babel}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{listings}
+\usetikzlibrary{er,positioning,arrows.meta}
+
+\author{Wojeciech Matusiak \textless wm382710@students.mimuw.edu.pl\textgreater}
+\title{Zadanie zaliczeniowe z baz danych}
+
+\lstset{
+    basicstyle=\normalsize\ttfamily,
+    breakatwhitespace=false,
+    breaklines=true,
+    commentstyle=\color[rgb]{0, 0.4, 0},
+    extendedchars=true,
+    frame=single,
+    keepspaces=true,
+    keywordstyle=\color{blue},
+    numbers=left,
+    numbersep=5pt,
+    numberstyle=\footnotesize,
+    rulecolor=\color{black},
+    showstringspaces=false,
+    stringstyle=\color{red},
+    literate={ę}{{\k e}}1 {ó}{{\'o}}1 {ą}{{\k a}}1 {ś}{{\'s}}1 {ł}{{\l}}1 {ż}{{\.z}}1 {ź}{{\'z}}1 {ć}{{\'c}}1 {ń}{{\'n}}1,
+    xleftmargin=5mm
+}
+
+\lstdefinelanguage{ODL}{
+  morekeywords={
+    interface,
+    attribute,
+    reference,
+    method
+  },
+  sensitive=true % keywords are not case-sensitive
+}
+
+
+\begin{document}
+    \maketitle
+
+    \section{Projekt bazy danych}
+
+    \subsection{Diagram ER}
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}[auto,node distance=1.5cm]
+            %% LogEntries entity
+            \node[entity] (LogEntries) {LogEntries}
+                [grow=left, level distance=3cm, sibling distance=9mm]
+                child[grow=up, level distance=2cm, xshift=40mm] {node[attribute] {\underline{id}}}
+                child[grow=up, level distance=2cm, xshift=28mm] {node[attribute] {size}}
+                child[grow=up, level distance=2cm, xshift=13mm] {node[attribute] {time}}
+                child[grow=up, level distance=2cm, xshift=-10mm, yshift=-3mm] {node[attribute] {timeToServe}}
+                child[yshift=15mm, xshift=4mm, yshift=-2mm] {node[attribute] {request}}
+                child[yshift=12mm, xshift=-2mm] {node[attribute] {remoteAddress}}
+                child[yshift=12mm] {node[attribute] {urlPath}}
+                child[yshift=12mm, xshift=4mm] {node[attribute] {status}};
+                
+            %% uploadedFrom relationship
+            \node[relationship] (uploadedFrom) [right = of LogEntries] {uploadedFrom};
+            
+            %% LogFiles entity
+            \node[entity] (LogFiles) [below right = of uploadedFrom] {LogFiles}
+                [grow=right, level distance=4cm, sibling distance=9mm]
+                child {node[attribute] {\underline{id}}}
+                child {node[attribute] {uploadDate}}
+                child {node[attribute] {uploadFormat}}
+                child {node[attribute] {duplicatesSkipped}}
+                child[xshift=-10mm] {node[attribute] {comment}};
+                
+            %% fromServer relationship
+            \node[relationship] (fromServer) [below left = of LogFiles] {uploadedFrom};
+                
+            %% Server entity
+            \node[entity] (Servers) [left = of fromServer] {Servers}
+                [grow=down, level distance=1cm, sibling distance=3cm]
+                child[yshift=15mm] {node[attribute] {\underline{name}}}
+                child[xshift=-25mm, yshift=5mm] {node[attribute] {description}}
+                child[xshift=-23mm] {node[attribute] {defaultLogFormat}};
+              
+            %% uploadedFrom relationship (ARROWS)
+            \draw (uploadedFrom) 
+                edge node {} (LogEntries)
+                edge[-{Latex[length=2mm,width=3mm]}] node {} (LogFiles);
+                
+            %% uploadedFrom relationship (ARROWS)
+            \draw (fromServer) 
+                edge node {} (LogFiles)
+                edge[-{Latex[length=2mm,width=3mm]}] node {} (Servers);
+                
+            
+            %% Filters entity
+            \node[entity] (Filters) [below = 2cm of Servers] {Filters}
+                [grow=left, level distance=3cm, sibling distance=1cm]
+                child {node[attribute] {\underline{name}}}
+                child {node[attribute] {queryString}};
+                
+            %% ValuesLists entity
+            \node[entity] (ValuesLists) [right = 5cm of Filters] {ValuesLists}
+                [grow=left, level distance=3cm, sibling distance=1cm]
+                child {node[attribute] {\underline{id}}}
+                child {node[attribute] {name}};
+                
+            %% fromList relationship
+            \node[double, relationship] (fromList) [right = of ValuesLists] {fromList};
+                
+            %% ValuesListEntries entity
+            \node[double, entity] (ValuesListEntries) [below = of fromList] {ValuesListEntries}
+                [grow=left, level distance=3cm, sibling distance=1cm]
+                child {node[attribute] {\underline{value}}};
+                
+            %% fromList relationship (ARROWS)
+            \draw (fromList) 
+                edge[-{Latex[length=2mm,width=3mm]}] node {} (ValuesLists)
+                edge node {} (ValuesListEntries);
+        \end{tikzpicture}
+        \label{fig:erd}
+        \caption{Diagram związków encji dla aplikacji}
+    \end{figure}
+    
+    
+    \subsection{Skrótowy opis encji występujących w bazie}
+    
+    \subsubsection{LogEntries}
+    Obiekt \texttt{LogEntry} odpowiada pojedynczemu wpisowi w pliku logu. Każdy posiada unikatowy identyfikator na wewnętrzne potrzeby. Kolejne wpisy w obrębie wgranego pliku powinny mieć rosnące identyfikatory. Wszystkie poza atrybuty  \texttt{id} mogą nie mieć wartości, kiedy we wgrywanym pliku nie pojawiały się odpowiednie informacje
+    
+    \begin{description}
+        \item[id] Unikatowy identyfikator danego wpisu
+        \item[size] rozmiar odpowiedzi z nagłówkami, jeżeli dostępny, a jak nie, to bez nagłówków, chyba, że ten też jest niedostępny [\texttt{\%b} lub \texttt{\%B}]
+        \item[time] czas, z którego pochodzi dany wpis [\texttt{\%t}]
+        \item[timeToServe] czas przetwarzania żądania [\texttt{\%{FORMAT}T} lub \texttt{\%D}]
+        \item[request] typ żądania (GET, POST itp.) [\texttt{\%m} lub zgadywane z \texttt{\%r}]
+        \item[remoteAddress] adres, z którego pochodzi rządanie [\texttt{\%h}]
+        \item[urlPath] fragment URL zawierający ścieżkę do żądanego zasobu (bez ,,query string'') [\texttt{\%U} lub zgadywane z \texttt{\%r}]
+        \item[status] status odpowiedzi [\texttt{\%s} lub \texttt{\%>s}]
+    \end{description}
+    
+    \subsubsection{LogFile}
+    Obiekt \texttt{LogFile} akcji wgrania pliku logu do aplikacji. 
+    
+    \begin{description}
+        \item[id] identyfikator operacji wgrania logu
+        \item[uploadDate] data wgrania pliku
+        \item[uploadFormat] format używany podczas parsowania wpisów z pliku (np. \texttt{\%h \%l \%u \%t "\%r" \%>s \%b})
+        \item[duplicatesSkipped] liczba wpisów, które zostały rozpoznane jako duplikaty wpisów znajdujących się już w bazie i przez to zostały pominięte
+        \item[comment] opcjonalny komentarz użytkownika do wgrywanych danych
+    \end{description}
+    
+    \subsubsection{Servers}
+    Według (obecnych) założeń, aplikacja ma umożliwiać pracę z różnymi serwerami i zapewniać pewną separację (np. kiedy wyszukujemy konkretne wpisy, to to wyszukiwanie jest zawsze ograniczone do konkretnego serwera). Obiekt \texttt{Server} stanowi właśnie reprezentacje takiego serwera.
+    
+    \begin{description}
+        \item[name] unikatowa nazwa serwera nadana przez użytkownika w momencie dodawania serwera do aplikacji
+        \item[description] opis serwera
+        \item[defaultLogFormat] domyślna wartość \texttt{uploadFormat} dla kolejnych operacji wgrywania logów z tego serwera
+    \end{description}
+    
+    \subsection{Filters, ValuesLists i ValuesListEntries}
+    Zapisane filtry użytkownika. Obiekt \texttt{Filter} reprezentuje pojedynczy taki filtr i jest przechowywany w postaci napisu zapytania, który użytkownik wprowadza w polu wyszukiwania. (Format zostanie ustalony później.)
+    
+    Klasa \texttt{ValuesList} umożliwia przechowywanie predefiniowanych list wartości, do wykorzystania w wyszukiwaniu (na przykład lista kilku wrednych adresów z Republiki Chińskiej). Encje ValuesLists oraz ValuesListEntries służą właśnie do przechowywania tych list w bazie danych.
+    
+    \subsection{Opis w ODL}
+    \lstinputlisting[language=ODL]{ODL.txt}
+\end{document}
