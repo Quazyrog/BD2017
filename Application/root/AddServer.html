@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new server</title>
+</head>
+<body>
+    <h1>Add new server</h1>
+    <form method="post" action="api/servers/add.php">
+        <label>
+            Server name <br>
+            <input name="name">
+        </label>
+        <br>
+        <label>
+            Default log format: <br>
+            <input name="defaultFormat">
+        </label>
+        <br>
+        <label>
+            Description: <br>
+            <textarea name="description" cols="80"></textarea>
+        </label>
+        <br>
+        <button>Submit</button>
+    </form>
+</body>
+</html>

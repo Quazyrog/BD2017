@@ -6,3 +6,8 @@ namespace config\database
     const USER = "loggit";
     const PASSWORD = "like%froggit";
 }
+
+namespace config
+{
+    const FETCH_PAGE_SIZE = 100;
+}
