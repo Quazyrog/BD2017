@@ -11,7 +11,8 @@ namespace config
 {
     const FETCH_PAGE_SIZE = 100;
     const MAX_LOG_FILE_SIZE = 4 * 1024 * 1024;
-    const MAX_LOG_LINES = 50000;
+    const MAX_LOG_LINES = 400000;
     const MAX_LOG_LINE_LENGTH = 4096;
+    const LOG_COMMIT_INTERVAL = 25000;
     const TIMEZONE_NAME = "Europe/Warsaw";
 }

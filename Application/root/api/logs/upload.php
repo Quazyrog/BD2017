@@ -55,6 +55,9 @@ class EP extends APIEndpoint {
             return $this->message_("format must be specified either in request or in server's defaults");
         $parser = new \Kassner\LogParser\LogParser();
 
+        // lul, całe życie w nieświadomości ...
+        $this->database->beginTransaction();
+
         $file = \entities\LogFile::Create($serv, $_REQUEST["format"]);
         if (isset($_REQUEST["comment"]))
             $file->setComment($_REQUEST["comment"]);
@@ -69,13 +72,24 @@ class EP extends APIEndpoint {
             "INSERT INTO logentries 
              (uploadedfrom, responsebytes, time, timetoserve, method, remoteaddress, urlpath, status) 
              VALUES (:fro, :rbytes, :tm, :tmts, :mt, :rema, :urlp, :stat)");
-        while (!feof($fp) && $line_cnt < \config\MAX_LOG_LINES) {
+        while (!feof($fp)) {
+            if ($line_cnt > \config\MAX_LOG_LINES) {
+                return $this->message_("File was to large to process in this php script, to be fully processed");
+            }
             ++$line_cnt;
+            if ($line_cnt % \config\LOG_COMMIT_INTERVAL == 0) {
+                $this->database->commit();
+                $this->database->beginTransaction();
+            }
+
+
             $exec_args = $this->parseLine($parser, $line);
-            $exec_args["fro"] = $file->getId();
             if ($exec_args) {
-                if (!$stm->execute($exec_args))
-                    ++$invalid_cnt;
+                $exec_args["fro"] = $file->getId();
+                if (!$stm->execute($exec_args)) {
+                    var_dump($stm->errorInfo());
+                    die("kappa");
+                }
             } else {
                 ++$invalid_cnt;
             }
@@ -84,6 +98,7 @@ class EP extends APIEndpoint {
 
         $file->setInvalidSkipped($invalid_cnt);
         $file->setDuplicatesSkipped($dups_cnt);
+        $this->database->commit();
 
         return $this->result_($file);
     }
