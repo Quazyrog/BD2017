@@ -72,6 +72,8 @@ class EP extends APIEndpoint {
             "INSERT INTO logentries 
              (uploadedfrom, responsebytes, time, timetoserve, method, remoteaddress, urlpath, status) 
              VALUES (:fro, :rbytes, :tm, :tmts, :mt, :rema, :urlp, :stat)");
+        $bdup = true;
+        $chk_stm = $this->database->prepare("SELECT IsDuplicate(:fro, :rbytes, :tm, :tmts, :mt, :rema, :urlp, :stat)");
         while (!feof($fp)) {
             if ($line_cnt > \config\MAX_LOG_LINES) {
                 return $this->message_("File was to large to process in this php script, to be fully processed");
@@ -85,11 +87,14 @@ class EP extends APIEndpoint {
 
             $exec_args = $this->parseLine($parser, $line);
             if ($exec_args) {
-                $exec_args["fro"] = $file->getId();
-                if (!$stm->execute($exec_args)) {
-                    var_dump($stm->errorInfo());
-                    die("kappa");
+                if ($bdup){
+                    $chk_stm->execute(array_merge($exec_args, ["fro" => $serv->getName()]));
+                    $bdup = $chk_stm->fetch()[0];
                 }
+                if (!$bdup)
+                    $stm->execute(array_merge($exec_args, ["fro" => $file->getId()]));
+                else
+                    ++$dups_cnt;
             } else {
                 ++$invalid_cnt;
             }
