@@ -56,16 +56,18 @@ abstract class Entity implements JsonSerializable
 
 
         $stm_str = null;
-        $args = array_merge($this->updates_,$this->getKey_());
+        $args = null;
         $udata = self::MakeColumnList($this->updates_);
         $kdata = self::MakeColumnList($this->getKey_());
         switch ($this->state)
         {
             case self::LOADED:
+                $args = array_merge($this->updates_,$this->getKey_());
                 $stm_str = "UPDATE " . $this->tableName_() . " SET " . $udata["cols"] . " = ROW" . $udata["vals"]
                     . " WHERE " . $kdata["cols"] . " = " . $kdata["vals"];
                 break;
             case self::CREATED:
+                $args = $this->updates_;
                 $stm_str = "INSERT INTO " . $this->tableName_() . " " . $udata["cols"]  . " VALUES " . $udata["vals"]
                     . " RETURNING " . $kdata["cols"];
                 break;

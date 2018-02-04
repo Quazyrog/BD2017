@@ -47,34 +47,27 @@ class Server extends Entity
         }
     }
 
-    /**
-     * @return string
-     */
+    public function getName(): string
+    {
+        return $this->name_;
+    }
+
     public function getDescription() : string
     {
         return $this->description_;
     }
 
-    /**
-     * @param string $description_
-     */
     public function setDescription(string $description_): void
     {
         $this->description_ = $description_;
         $this->update_("description", $description_);
     }
 
-    /**
-     * @return string
-     */
     public function getDefaultFormat() : string
     {
         return $this->defaultFormat_;
     }
 
-    /**
-     * @param string $defaultFormat_
-     */
     public function setDefaultFormat(string $defaultFormat_): void
     {
         $this->defaultFormat_ = $defaultFormat_;

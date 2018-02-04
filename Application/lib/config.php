@@ -10,4 +10,8 @@ namespace config\database
 namespace config
 {
     const FETCH_PAGE_SIZE = 100;
+    const MAX_LOG_FILE_SIZE = 4 * 1024 * 1024;
+    const MAX_LOG_LINES = 50000;
+    const MAX_LOG_LINE_LENGTH = 4096;
+    const TIMEZONE_NAME = "Europe/Warsaw";
 }
