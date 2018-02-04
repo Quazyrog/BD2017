@@ -106,5 +106,10 @@ class Server extends Entity
     {
         return ["name" => $this->name_];
     }
+
+    protected  function setKey_(array $key): void
+    {
+        assert($this->name_ == $key["name"]);
+    }
 }
 

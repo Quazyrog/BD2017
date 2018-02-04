@@ -13,18 +13,26 @@ abstract class Entity implements JsonSerializable
     public const CREATED = 1;
     public const ZOMBIE = 2;
 
-    private static $defaultDatabase = null;
+    private static $DefaultDatabase = null;
 
-    private $updates_ = [];
+    protected static function MakeColumnList(array $data)
+    {
+        return [
+            "cols" => "(" . implode(", ", array_keys($data)) . ")",
+            "vals" => "(" . implode(", ", array_map(function ($k) {return ":" . $k;}, array_keys($data))) . ")"
+        ];
+    }
+
+    protected $updates_ = [];
+    protected $state;
     private $database_ = null;
-    private $state;
 
 
     public static function BindDefault(PDO $db)
     {
         if ($db == null)
             throw new \InvalidArgumentException();
-        self::$defaultDatabase = $db;
+        self::$DefaultDatabase = $db;
     }
 
 
@@ -46,40 +54,39 @@ abstract class Entity implements JsonSerializable
         if ($db == null)
             throw new \RuntimeException("There is no binding to the database");
 
-        $cols = implode(", ", array_keys($this->updates_));
-        $vals = implode(", ", array_map(function ($k) {return ":" . $k;}, array_keys($this->updates_)));
+
         $stm_str = null;
-        $args = null;
+        $args = array_merge($this->updates_,$this->getKey_());
+        $udata = self::MakeColumnList($this->updates_);
+        $kdata = self::MakeColumnList($this->getKey_());
         switch ($this->state)
         {
             case self::LOADED:
-                $key = $this->getKey_();
-                $key_cols = implode(", ", array_keys($key));
-                $key_vals = implode(", ", array_map(function ($k) {return ":" . $k;}, array_keys($key)));
-                $stm_str = "UPDATE " . $this->tableName_() . " SET (" . $cols . ")" . " = ROW(" . $vals . ")"
-                    . " WHERE (" . $key_cols . ") = (" . $key_vals . ")";
-                $args = array_merge($this->updates_, $key);
+                $stm_str = "UPDATE " . $this->tableName_() . " SET " . $udata["cols"] . " = ROW" . $udata["vals"]
+                    . " WHERE " . $kdata["cols"] . " = " . $kdata["vals"];
                 break;
             case self::CREATED:
-                $args = $this->updates_;
-                $stm_str = "INSERT INTO " . $this->tableName_() . " (" . $cols . ")" . " VALUES (" . $vals . ")";
+                $stm_str = "INSERT INTO " . $this->tableName_() . " " . $udata["cols"]  . " VALUES " . $udata["vals"]
+                    . " RETURNING " . $kdata["cols"];
                 break;
             case self::ZOMBIE:
                 throw new EntitySaveError("Nobody can save zombie, even you!");
         }
 
         $stm = $db->prepare($stm_str);
-            error_log($stm_str);
         if (!$stm || !$stm->execute($args) || $stm->rowCount() != 1) {
             throw new EntitySaveError("Unable to save entity");
         } else {
+            if ($this->state == self::CREATED)
+                $this->setKey_($stm->fetch(PDO::FETCH_ASSOC));
+            $this->state = self::LOADED;
             $this->updates_ = [];
         }
     }
 
     protected function databaseBound_() : PDO
     {
-        return $this->database_ ?: self::$defaultDatabase;
+        return $this->database_ ?: self::$DefaultDatabase;
     }
 
     protected function update_(string $property, $value)
@@ -94,4 +101,5 @@ abstract class Entity implements JsonSerializable
     protected abstract function tableName_() : string;
 
     protected abstract function getKey_() : array;
+    protected abstract function setKey_(array $key) : void;
 }
