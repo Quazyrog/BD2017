@@ -12,3 +12,13 @@ function MapFromLowercase(array $names) : callable
     };
 }
 
+function ValidateDate($date)
+{
+    $d = \DateTime::createFromFormat("Y-m-d", $date);
+    if ($d && $d->format("Y-m-d") == $date)
+        return true;
+    $d = \DateTime::createFromFormat("Y-m-d H:i:s", $date);
+    return $d && $d->format("Y-m-d") == $date;
+}
+
+
