@@ -25,12 +25,12 @@ class EP extends APIEndpoint {
             if (isset($data->request)) {
                 $xd = explode(" ", $data->request, 3);
                 $vals["mt"] = $xd[0];
-                $vals["urlp"] = strstr($xd[1] . "?", "?", true);
+                $vals["urlp"] = urldecode(strstr($xd[1] . "?", "?", true));
             }
             if (isset($data->requestMethod))
                 $vals["mt"] = $data->requestMethod;
             if (isset($data->URL))
-                $vals["urlp"] = $data->URL;
+                $vals["urlp"] = urldecode($data->URL);
 
             return $vals;
         } catch (\Kassner\LogParser\FormatException $e) {
