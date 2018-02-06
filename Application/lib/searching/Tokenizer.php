@@ -50,7 +50,12 @@ class Tokenizer
 
     public function isExhausted() : bool
     {
-        return $this->pos_ >= strlen($this->src_);
+        if ($this->pos_ + 1 >= strlen($this->src_)) {
+            $this->tokenType_ = self::TT_ERROR;
+            $this->token_ = false;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -80,10 +85,8 @@ class Tokenizer
     public function next() : string
     {
         $this->skipSpace_();
-        if ($this->isExhausted()) {
-            $this->token_ = false;
+        if ($this->isExhausted())
             return false;
-        }
 
         switch ($this->tokenType_) {
             case self::TT_COMMA:

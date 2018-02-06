@@ -3,6 +3,8 @@
 namespace searching\fields;
 
 
+use searching\SyntaxError;
+
 abstract class AbstractField
 {
     const VALUE_STORE_TYPE_NO_STORE = 0;
@@ -10,6 +12,9 @@ abstract class AbstractField
     const VALUE_STORE_TYPE_STRING = 2;
     const VALUE_STORE_TYPE_DATETIME = 3;
     const VALUE_STORE_TYPE_IP_ADDRESS = 4;
+
+    protected $appliedFunction_ = null;
+    private  $isAggregationField_ = false;
 
     static public function MapListType(string $list_type_name) : int
     {
@@ -51,8 +56,20 @@ abstract class AbstractField
 
     public function selectString(bool $aggreg)
     {
-        if (!$aggreg)
+        if ($this->appliedFunction_)
+            throw new \RuntimeException("Nope");
+        if (!$aggreg || $this->isAggregationField_)
             return $this->getLHS();
         return false;
+    }
+
+    public function isAggregationField(): bool
+    {
+        return $this->isAggregationField_;
+    }
+
+    public function setIsAggregationField(bool $is_aggregation_field): void
+    {
+        $this->isAggregationField_ = $is_aggregation_field;
     }
 }

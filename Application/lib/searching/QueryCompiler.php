@@ -25,25 +25,65 @@ class QueryCompiler
         $this->fields_[$field->getName()] = $field;
     }
 
-    public function compile(string $query) : string
+    /**
+     * @param string $query
+     * @return string
+     * @throws SyntaxError
+     */
+    public function compile(string $query) : Query
     {
         $tokenizer = new Tokenizer($query);
         $tokenizer->next();
+        $query = new Query();
+        foreach ($this->fields_ as $f)
+            $f->setIsAggregationField(false);
 
-        $filter = $this->filterPartCompile_($tokenizer);
+        $query->setFilter($this->filterPartCompile_($tokenizer));
+        $query->setGrouping($this->aggregatePartCompile_($tokenizer));
+
+        if (!$tokenizer->isExhausted())
+            $tokenizer->raiseSyntaxError("expected and of input");
 
         $shown_fields = [];
         foreach ($this->fields_ as $f) {
-            $fstr = $f->selectString(false);
+            $fstr = $f->selectString($query->getGrouping());
             if ($fstr)
                 $shown_fields[] = $fstr;
         }
+        $query->setShownFields($shown_fields);
 
-        return "SELECT " . implode(",", $shown_fields) . " FROM LogEntries"
-            . " LEFT JOIN LogFiles ON LogEntries.uploadedFrom = LogFiles.id"
-            . " WHERE LogFiles.serverName=? AND (" . $filter . ")";
+        return $query;
     }
 
+
+    /**
+     * @param Tokenizer $tokenizer
+     * @return string
+     * @throws SyntaxError
+     */
+    protected function aggregatePartCompile_(Tokenizer $tokenizer) : string
+    {
+        if ($tokenizer->isExhausted())
+            return "";
+
+        if (!$tokenizer->matchAny(["aggregate"]))
+            $tokenizer->raiseSyntaxError("`aggregate` expected");
+        $grouping = [];
+        foreach ($this->precompileFieldsList_($tokenizer) as $fi => $fu) {
+            $field = $this->fields_[$fi];
+//            $field->applyFunction($fu);
+            $field->setIsAggregationField(true);
+            $grouping[] = $field->selectString(false);
+        }
+
+        return implode(",", $grouping);
+    }
+
+    /**
+     * @param Tokenizer $tokenizer
+     * @return string
+     * @throws SyntaxError
+     */
     protected function filterPartCompile_(Tokenizer $tokenizer) : string
     {
         $compiled = "";
@@ -58,6 +98,7 @@ class QueryCompiler
                 $compiled .= "(" . $this->filterPartCompile_($tokenizer) . ")";
                 if ($tokenizer->getTokenType() != Tokenizer::TT_RPARENTHESIS)
                     $tokenizer->raiseSyntaxError("expected `)`");
+                $tokenizer->next();
             } else {
                 $tokenizer->raiseSyntaxError("expected valid filter term");
             }
@@ -71,6 +112,11 @@ class QueryCompiler
         return $compiled;
     }
 
+    /**
+     * @param Tokenizer $tokenizer
+     * @return mixed
+     * @throws SyntaxError
+     */
     protected function compileFilterTerm_(Tokenizer $tokenizer)
     {
         $lhs = $tokenizer->getToken();
@@ -90,5 +136,44 @@ class QueryCompiler
 
         $tokenizer->next();
         return $field->compile($cmp, $rhs);
+    }
+
+    protected function precompileFieldsList_(Tokenizer $tokenizer)
+    {
+        $loop = true;
+        $result = [];
+
+        while ($loop) {
+            if ($tokenizer->getTokenType() != Tokenizer::TT_LHS)
+                $tokenizer->raiseSyntaxError("expected field or function name");
+            $field = $tokenizer->getToken();
+            $func = null;
+
+            $tokenizer->next();
+            if (!$tokenizer->isExhausted()) {
+                switch ($tokenizer->getTokenType()) {
+                    case Tokenizer::TT_COMMA:
+                        break;
+                    case Tokenizer::TT_LPARENTHESIS:
+                        $tokenizer->next();
+                        if ($tokenizer->getTokenType() != Tokenizer::TT_LHS)
+                            $tokenizer->raiseSyntaxError("expected field name");
+                        $func = $field;
+                        $field = $tokenizer->getToken();
+                        $tokenizer->matchAny([")"]);
+                        break;
+                    default:
+                        $loop = false;
+                }
+            } else {
+                $loop = false;
+            }
+
+            if (!isset($this->fields_[$field]))
+                $tokenizer->raiseSyntaxError("Unknown field name `" . $field . "`");
+            $result[$field] = $func;
+        }
+
+        return $result;
     }
 }
