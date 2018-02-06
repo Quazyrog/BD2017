@@ -18,6 +18,7 @@ class QueryCompiler
         $c->registerField(new fields\StatusField($db));
         $c->registerField(new fields\TimeToServe($db));
         $c->registerField(new fields\URLPathField($db));
+        $c->registerField(new fields\RemoteAddressField($db));
         return $c;
     }
 
