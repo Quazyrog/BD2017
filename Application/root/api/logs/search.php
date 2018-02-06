@@ -9,7 +9,6 @@ $foo = new class extends APIEndpoint {
         $compiler = \searching\QueryCompiler::BuildDefaultCompiler($this->database);
         try {
             $stm_str = $compiler->compile($_REQUEST["query"]) . " LIMIT 50";
-            var_dump($stm_str);
         } catch (\searching\SyntaxError $e) {
             $this->message_("Syntax error");
             $this->result_($e);

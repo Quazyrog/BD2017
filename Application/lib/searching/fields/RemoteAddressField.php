@@ -36,7 +36,7 @@ class RemoteAddressField extends AbstractField
         return parent::compile($comparator, $rhs);
     }
 
-    public function prepareRHS(string $rhs): string
+    protected function prepareRHS_(string $rhs): string
     {
         $pos = strpos($rhs, "/");
         if ($pos === false) {

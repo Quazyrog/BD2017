@@ -17,7 +17,7 @@ abstract class NumericField extends AbstractField
         return "INT";
     }
 
-    public function prepareRHS(string $rhs): string
+    protected function prepareRHS_(string $rhs): string
     {
         if (!ctype_digit($rhs))
             throw new SyntaxError("Integral number expected, got `" . $rhs . "'");

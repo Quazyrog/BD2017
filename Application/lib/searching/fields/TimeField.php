@@ -22,7 +22,7 @@ class TimeField extends AbstractField
         return "time";
     }
 
-    public function prepareRHS(string $rhs): string
+    protected function prepareRHS_(string $rhs): string
     {
         if (!\utils\ValidateDate($rhs))
             throw new SyntaxError("Invalid date `" . $rhs . "` (expected format is 'YYYY-mm-dd[ HH:MM:SS])");

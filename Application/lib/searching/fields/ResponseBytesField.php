@@ -17,7 +17,7 @@ class ResponseBytesField extends NumericField
         return "LogEntries.responseBytes";
     }
 
-    function prepareRHS(string $rhs) : string
+    protected function prepareRHS_(string $rhs) : string
     {
         $err_msg = "Invalid right-hand side: `" . $rhs . "`";
         $spl = $this->splitRHS_($rhs);

@@ -5,7 +5,7 @@ namespace searching;
 
 class Tokenizer
 {
-    public const COMPARATOR_CHARS = "!@#$%^&*+=<>:?";
+    public const COMPARATOR_CHARS = "!@%^&*+=<>:?";
     public const RHS_TERMINATION_CHARS = "()";
 
     public const TT_ERROR = -1;
@@ -98,7 +98,7 @@ class Tokenizer
                     ?: $this->getLParenthesis_();
                 break;
             case self::TT_COMPARATOR:
-                $this->token_ = $this->getRHS_();
+                $this->token_= $this->getListName_() ?: $this->getRHS_();
                 break;
             case self::TT_RHS:
             case self::TT_RPARENTHESIS:
@@ -122,6 +122,45 @@ class Tokenizer
             ++$this->pos_;
     }
 
+
+    protected function getListName_()
+    {
+        $npos = $this->pos_;
+        $c =$this->src_[$npos];
+        $next_chr = function () use (&$npos, &$c)
+        {
+            if ($npos + 1 < strlen($this->src_)) {
+                $c = $this->src_[++$npos];
+                return true;
+            }
+            return false;
+        };
+
+        $yield = "$";
+        if ($c != "$")
+            return false;
+        $next_chr();
+        if ($c == "{") {
+            $next_chr();
+            while ($c && $c != "}") {
+                $yield .= $c;
+                $next_chr();
+            }
+            if ($c != "}")
+                $this->raiseSyntaxError("expected `}`");
+            $next_chr();
+            $this->pos_ = $npos;
+        } else {
+            $this->pos_ = $npos;
+            $yield .= $this->getLHS_();
+        }
+
+        if ($yield) {
+            $this->tokenType_ = self::TT_RHS;
+            return $yield;
+        }
+        return false;
+    }
 
     protected function getLParenthesis_()
     {

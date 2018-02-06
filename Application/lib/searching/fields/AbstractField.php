@@ -41,7 +41,14 @@ abstract class AbstractField
 
     public abstract function getLHS(): string;
 
-    public function prepareRHS(string $rhs): string
+    final public function prepareRHS(string $rhs): string
+    {
+        if ($rhs[0] != "$")
+            return $this->prepareRHS_($rhs);
+        return $rhs;
+    }
+
+    protected function prepareRHS_(string $rhs): string
     {
         return $rhs;
     }
@@ -50,6 +57,25 @@ abstract class AbstractField
 
     public function compile(string $comparator, string $rhs): string
     {
+        if ($rhs[0] == "$") {
+            if ($comparator != ":")
+                throw new SyntaxError("`:` is the only allowed comparator for list checks");
+            $stm = $this->database_->prepare("SELECT * FROM ValuesLists WHERE name=?");
+            $stm->execute([substr($rhs, 1)]);
+            if ($stm->rowCount() != 1)
+                throw new SyntaxError("Values list `" . $rhs . "` does not exist");
+            $list = $stm->fetchObject(\entities\ValuesList::class);
+            if ($list->getType() != $this->getStoreType())
+                throw new SyntaxError("Values list `" . $rhs . "` and field `" . $this->getName()
+                    . "` have incompatible types");
+
+            $conv = $this->getStoredConversionString();
+            if ($conv)
+                $conv = "::" . $conv;
+            return $this->getLHS() . " IN (SELECT value" . $conv . " FROM ValuesListEntries WHERE fromList="
+                . $list->getId() . ")";
+        }
+
         $allowed_comparators = ["=", "!=", "<", ">", ">=", "<="];
         if (!in_array($comparator, $allowed_comparators))
             throw new SyntaxError("Error near `" . $this->getLHS() . $comparator . "`"

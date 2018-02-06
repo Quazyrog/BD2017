@@ -15,7 +15,7 @@ abstract class StringField extends AbstractField
         return "";
     }
 
-    public function prepareRHS(string $rhs): string
+    protected function prepareRHS_(string $rhs): string
     {
         return $this->database_->quote($rhs);
     }
