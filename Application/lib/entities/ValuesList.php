@@ -10,6 +10,7 @@ class ValuesList extends Entity
     private $id_;
     private $name_;
     private $type_;
+    private $length_;
 
     public function __construct(string $name="", string $store_type=AbstractField::VALUE_STORE_TYPE_NO_STORE)
     {
@@ -65,7 +66,7 @@ class ValuesList extends Entity
 
     public function jsonSerialize()
     {
-        return ["name" => $this->name_, "type" => $this->type_];
+        return ["name" => $this->name_, "type" => $this->type_, "length" => $this->getLength()];
     }
 
     public function getId()
@@ -81,5 +82,15 @@ class ValuesList extends Entity
     public function getType(): string
     {
         return $this->type_;
+    }
+
+    public function getLength() : int
+    {
+        if (!isset($this->length_)) {
+            $stm = $this->databaseBound_()->prepare("SELECT COUNT(*) FROM valueslistentries WHERE fromlist=?");
+            $stm->execute([$this->getId()]);
+            $this->length_ = intval($stm->fetch()[0]);
+        }
+        return $this->length_;
     }
 }
