@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search logs</title>
+</head>
+<body>
+<form method="post" action="api/logs/search.php">
+    <label>
+        Server: <br>
+        <input type="text" name="servername">
+    </label>
+    <br>
+    <label>
+        Order by: <br>
+        <input type="text" name="order">
+    </label>
+    <br>
+    <label>
+        Query: <br>
+        <textarea name="query" rows="3" cols="80"></textarea>
+    </label>
+    <br>
+    <input type="submit">
+</form>
+</body>
+</html>
