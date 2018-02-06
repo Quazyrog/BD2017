@@ -6,6 +6,7 @@ namespace searching;
 class Tokenizer
 {
     public const COMPARATOR_CHARS = "!@#$%^&*+=<>:?";
+    public const RHS_TERMINATION_CHARS = "()";
 
     public const TT_ERROR = -1;
     public const TT_OPERATOR = 0;
@@ -52,6 +53,29 @@ class Tokenizer
         return $this->pos_ >= strlen($this->src_);
     }
 
+    /**
+     * Throw syntax error supplied with current tokenizer state.
+     * @param string $msg additional message
+     * @throws SyntaxError
+     */
+    public function raiseSyntaxError(string $msg)
+    {
+        $start = $this->pos_ - strlen($this->token_) + 1;
+        $end = $this->pos_ + 1;
+        throw new SyntaxError(sprintf("SyntaxError @[%u:%u], token=`%s`: %s", $start, $end, $this->token_, $msg));
+    }
+
+
+    public function matchAny($tokens)
+    {
+        foreach ($tokens as $t) {
+            if ($this->token_ == $t) {
+                $this->next();
+                return $t;
+            }
+        }
+        return false;
+    }
 
     public function next() : string
     {
@@ -64,7 +88,7 @@ class Tokenizer
         switch ($this->tokenType_) {
             case self::TT_COMMA:
             case self::TT_LPARENTHESIS:
-                $this->token_ = $this->getLHS_();
+                $this->token_ = $this->getLParenthesis_() ?: $this->getLHS_();
                 break;
             case self::TT_LHS:
                 $this->token_ = $this->getComparator_() ?: $this->getExpected(self::TT_COMMA, ",");
@@ -133,7 +157,7 @@ class Tokenizer
         $c = $this->src_[$n_pos];
         $yield = "";
         $quote = false;
-        while ($quote || !ctype_space($c)) {
+        while ($quote || (!ctype_space($c) && strpos(self::RHS_TERMINATION_CHARS, $c) === false)) {
             switch ($c) {
                 case '"':
                     $quote = !$quote;

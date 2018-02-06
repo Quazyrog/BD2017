@@ -60,12 +60,9 @@ class ResponseBytesField extends NumericField
     protected function splitRHS_($rhs)
     {
         $i = 0;
-        foreach ($rhs as $c) {
-            if (ctype_digit($c))
-                ++$i;
-        }
+        for (; $i < strlen($rhs) && ctype_digit($rhs[$i]); ++$i) {};
         if ($i < strlen($rhs))
-            return [substr($rhs, 0, $i), substr($rhs, $i, -1)];
+            return [substr($rhs, 0, $i), substr($rhs, $i)];
         return [$rhs, ""];
     }
 }
