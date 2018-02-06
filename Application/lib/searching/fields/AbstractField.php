@@ -13,7 +13,6 @@ abstract class AbstractField
     const VALUE_STORE_TYPE_DATETIME = 3;
     const VALUE_STORE_TYPE_IP_ADDRESS = 4;
 
-    protected $appliedFunction_ = null;
     private  $isAggregationField_ = false;
 
     static public function MapListType(string $list_type_name) : int
@@ -54,10 +53,13 @@ abstract class AbstractField
 
     public abstract function getStoredConversionString() : string;
 
-    public function selectString(bool $aggreg)
+    final public function selectString(bool $aggreg)
     {
-        if ($this->appliedFunction_)
-            throw new \RuntimeException("Nope");
+        return $this->selectString_($aggreg && !$this->isAggregationField_);
+    }
+
+    protected function selectString_(bool $aggreg)
+    {
         if (!$aggreg || $this->isAggregationField_)
             return $this->getLHS();
         return false;
@@ -71,5 +73,12 @@ abstract class AbstractField
     public function setIsAggregationField(bool $is_aggregation_field): void
     {
         $this->isAggregationField_ = $is_aggregation_field;
+    }
+
+    public function applyFunction($function_name)
+    {
+        if ($function_name)
+            throw new SyntaxError("Function `" . $function_name . "` cannot be applied to field" . "`"
+                . $this->getName() . "`");
     }
 }

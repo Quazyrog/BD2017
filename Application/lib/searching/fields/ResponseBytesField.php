@@ -26,7 +26,7 @@ class ResponseBytesField extends NumericField
         return strval($spl[0] * $this->getUnitMultiplicity_($spl[1]));
     }
 
-    public function selectString(bool $aggreg)
+    protected function selectString_(bool $aggreg)
     {
         if ($aggreg)
             return "SUM(" . $this->getLHS() . ")";

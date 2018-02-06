@@ -27,7 +27,7 @@ class QueryCompiler
 
     /**
      * @param string $query
-     * @return string
+     * @return Query
      * @throws SyntaxError
      */
     public function compile(string $query) : Query
@@ -35,8 +35,10 @@ class QueryCompiler
         $tokenizer = new Tokenizer($query);
         $tokenizer->next();
         $query = new Query();
-        foreach ($this->fields_ as $f)
+        foreach ($this->fields_ as $f) {
             $f->setIsAggregationField(false);
+            $f->applyFunction(null);
+        }
 
         $query->setFilter($this->filterPartCompile_($tokenizer));
         $query->setGrouping($this->aggregatePartCompile_($tokenizer));
@@ -71,7 +73,7 @@ class QueryCompiler
         $grouping = [];
         foreach ($this->precompileFieldsList_($tokenizer) as $fi => $fu) {
             $field = $this->fields_[$fi];
-//            $field->applyFunction($fu);
+            $field->applyFunction($fu);
             $field->setIsAggregationField(true);
             $grouping[] = $field->selectString(false);
         }
@@ -150,24 +152,22 @@ class QueryCompiler
             $func = null;
 
             $tokenizer->next();
-            if (!$tokenizer->isExhausted()) {
-                switch ($tokenizer->getTokenType()) {
-                    case Tokenizer::TT_COMMA:
-                        break;
-                    case Tokenizer::TT_LPARENTHESIS:
-                        $tokenizer->next();
-                        if ($tokenizer->getTokenType() != Tokenizer::TT_LHS)
-                            $tokenizer->raiseSyntaxError("expected field name");
-                        $func = $field;
-                        $field = $tokenizer->getToken();
-                        $tokenizer->matchAny([")"]);
-                        break;
-                    default:
-                        $loop = false;
-                }
-            } else {
-                $loop = false;
+            switch ($tokenizer->getTokenType()) {
+                case Tokenizer::TT_COMMA:
+                    break;
+                case Tokenizer::TT_LPARENTHESIS:
+                    $tokenizer->next();
+                    if ($tokenizer->getTokenType() != Tokenizer::TT_LHS)
+                        $tokenizer->raiseSyntaxError("expected field name");
+                    $func = $field;
+                    $field = $tokenizer->getToken();
+                    $tokenizer->next();
+                    $tokenizer->matchAny([")"]);
+                    break;
+                default:
+                    $loop = false;
             }
+            $loop &= !$tokenizer->isExhausted();
 
             if (!isset($this->fields_[$field]))
                 $tokenizer->raiseSyntaxError("Unknown field name `" . $field . "`");

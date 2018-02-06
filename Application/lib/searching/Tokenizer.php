@@ -94,7 +94,8 @@ class Tokenizer
                 $this->token_ = $this->getLParenthesis_() ?: $this->getLHS_();
                 break;
             case self::TT_LHS:
-                $this->token_ = $this->getComparator_() ?: $this->getExpected(self::TT_COMMA, ",");
+                $this->token_ = $this->getComparator_() ?: $this->getExpected(self::TT_COMMA, ",")
+                    ?: $this->getLParenthesis_();
                 break;
             case self::TT_COMPARATOR:
                 $this->token_ = $this->getRHS_();

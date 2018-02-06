@@ -10,6 +10,8 @@ require_once "Utils.php";
 
 class TimeField extends AbstractField
 {
+    private $fn = null;
+
     public function getLHS(): string
     {
         return "LogEntries.time";
@@ -41,5 +43,31 @@ class TimeField extends AbstractField
     public function getStoredConversionString(): string
     {
         return "TIMESTAMP";
+    }
+
+    public function applyFunction($function_name)
+    {
+        $this->fn = $function_name;
+    }
+
+    protected function selectString_(bool $aggreg)
+    {
+        if ($aggreg)
+            return false;
+        if (!$this->fn)
+            return $this->getLHS();
+        switch ($this->fn) {
+            case "trunc_minute":
+                return "date_trunc('minute'," . $this->getLHS() . ")";
+            case "trunc_hour":
+                return "date_trunc('hour'," . $this->getLHS() . ")";
+            case "trunc_day":
+                return "date_trunc('day'," . $this->getLHS() . ")";
+            case "trunc_month":
+                return "date_trunc('month'," . $this->getLHS() . ")";
+            default :
+                throw new SyntaxError("Function `" . $this->fn . "` cannot be applied to field" . "`"
+                    . $this->getName() . "`");
+        }
     }
 }
