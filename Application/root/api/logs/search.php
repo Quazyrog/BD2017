@@ -6,7 +6,7 @@ require "../../../vendor/autoload.php";
 $foo = new class extends APIEndpoint {
     protected function main(array $args): bool
     {
-        $compiler = \searching\QueryCompiler::BuildDefaultCompiler();
+        $compiler = \searching\QueryCompiler::BuildDefaultCompiler($this->database);
         try {
             $stm_str = $compiler->compile($_REQUEST["query"]) . " LIMIT 50";
             var_dump($stm_str);

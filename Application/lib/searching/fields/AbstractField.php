@@ -14,6 +14,12 @@ abstract class AbstractField
     const VALUE_STORE_TYPE_IP_ADDRESS = 4;
 
     private  $isAggregationField_ = false;
+    protected $database_;
+
+    public function __construct(\PDO $db)
+    {
+        $this->database_ = $db;
+    }
 
     static public function MapListType(string $list_type_name) : int
     {

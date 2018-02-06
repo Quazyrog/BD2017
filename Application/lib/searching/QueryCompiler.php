@@ -2,21 +2,22 @@
 
 namespace searching;
 
-use entities\Server;
 use searching\fields\AbstractField;
-use searching\fields\ResponseBytesField;
-use searching\fields\TimeField;
 
 
 class QueryCompiler
 {
     private $fields_ = [];
 
-    public static function BuildDefaultCompiler()
+    public static function BuildDefaultCompiler(\PDO $db)
     {
         $c = new QueryCompiler();
-        $c->registerField(new ResponseBytesField());
-        $c->registerField(new TimeField());
+        $c->registerField(new fields\ResponseBytesField($db));
+        $c->registerField(new fields\TimeField($db));
+        $c->registerField(new fields\MethodField($db));
+        $c->registerField(new fields\StatusField($db));
+        $c->registerField(new fields\TimeToServe($db));
+        $c->registerField(new fields\URLPathField($db));
         return $c;
     }
 
