@@ -53,7 +53,7 @@ class TimeField extends AbstractField
     protected function selectString_(bool $aggreg)
     {
         if ($aggreg)
-            return false;
+            return "MIN(" . $this->getLHS() . ") || ' - ' || MAX(" . $this->getLHS() . ")";
         if (!$this->fn)
             return $this->getLHS();
         switch ($this->fn) {
