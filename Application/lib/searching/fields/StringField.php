@@ -5,7 +5,7 @@ namespace searching\fields;
 
 abstract class StringField extends AbstractField
 {
-    public function getStoreType(): int
+    public function getStoreType(): string
     {
         return self::VALUE_STORE_TYPE_STRING;
     }

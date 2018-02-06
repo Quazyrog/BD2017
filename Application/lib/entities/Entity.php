@@ -77,7 +77,7 @@ abstract class Entity implements JsonSerializable
 
         $stm = $db->prepare($stm_str);
         if (!$stm || !$stm->execute($args) || $stm->rowCount() != 1) {
-            var_dump($stm->errorInfo());
+//            var_dump($stm->errorInfo());
             throw new EntitySaveError("Unable to save entity");
         } else {
             if ($this->state == self::CREATED)

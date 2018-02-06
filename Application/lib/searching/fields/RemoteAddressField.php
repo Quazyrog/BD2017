@@ -19,7 +19,7 @@ class RemoteAddressField extends AbstractField
         return "address";
     }
 
-    public function getStoreType(): int
+    public function getStoreType(): string
     {
         return self::VALUE_STORE_TYPE_IP_ADDRESS;
     }

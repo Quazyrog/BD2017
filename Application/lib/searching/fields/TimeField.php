@@ -35,7 +35,7 @@ class TimeField extends AbstractField
         return parent::compile($comparator, "'" . $rhs . "'");
     }
 
-    public function getStoreType(): int
+    public function getStoreType(): string
     {
         return self::VALUE_STORE_TYPE_DATETIME;
     }

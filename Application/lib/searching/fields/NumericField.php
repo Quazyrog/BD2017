@@ -7,7 +7,7 @@ use searching\SyntaxError;
 
 abstract class NumericField extends AbstractField
 {
-    function getStoreType(): int
+    function getStoreType(): string
     {
         return self::VALUE_STORE_TYPE_INTEGER;
     }

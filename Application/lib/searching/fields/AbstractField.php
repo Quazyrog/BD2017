@@ -4,14 +4,15 @@ namespace searching\fields;
 
 
 use searching\SyntaxError;
+use function utils\ValidateDate;
 
 abstract class AbstractField
 {
-    const VALUE_STORE_TYPE_NO_STORE = 0;
-    const VALUE_STORE_TYPE_INTEGER = 1;
-    const VALUE_STORE_TYPE_STRING = 2;
-    const VALUE_STORE_TYPE_DATETIME = 3;
-    const VALUE_STORE_TYPE_IP_ADDRESS = 4;
+    const VALUE_STORE_TYPE_NO_STORE = "";
+    const VALUE_STORE_TYPE_INTEGER = "INTEGER";
+    const VALUE_STORE_TYPE_STRING = "STRING";
+    const VALUE_STORE_TYPE_DATETIME = "DATETIME";
+    const VALUE_STORE_TYPE_IP_ADDRESS = "IP_ADDRESS";
 
     private  $isAggregationField_ = false;
     protected $database_;
@@ -22,19 +23,19 @@ abstract class AbstractField
         $this->database_ = $db;
     }
 
-    static public function MapListType(string $list_type_name) : int
+    public static function ValidateListEntry(string $entry, string $store_type) : bool
     {
-        switch ($list_type_name) {
-            case "INTEGER":
-                return self::VALUE_STORE_TYPE_INTEGER;
-            case "STRING":
-                return self::VALUE_STORE_TYPE_STRING;
-            case "DATETIME":
-                return self::VALUE_STORE_TYPE_DATETIME;
-            case "IP_ADDRESS":
-                return self::VALUE_STORE_TYPE_IP_ADDRESS;
+        switch ($store_type) {
+            case self::VALUE_STORE_TYPE_INTEGER:
+                return filter_var($entry, FILTER_VALIDATE_INT);
+            case self::VALUE_STORE_TYPE_DATETIME:
+                return ValidateDate($entry);
+            case self::VALUE_STORE_TYPE_STRING:
+                return true;
+            case self::VALUE_STORE_TYPE_IP_ADDRESS:
+                return filter_var($entry, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
             default:
-                throw new \InvalidArgumentException("Invalid list type name `" . $list_type_name . "``");
+                throw new \InvalidArgumentException("Invalid store type for validation");
         }
     }
 
@@ -56,7 +57,7 @@ abstract class AbstractField
         return $this->getLHS() . $comparator . $rhs;
     }
 
-    public abstract function getStoreType(): int;
+    public abstract function getStoreType(): string;
 
     public abstract function getStoredConversionString() : string;
 
