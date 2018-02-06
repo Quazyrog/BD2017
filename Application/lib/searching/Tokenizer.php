@@ -60,9 +60,9 @@ class Tokenizer
      */
     public function raiseSyntaxError(string $msg)
     {
-        $start = $this->pos_ - strlen($this->token_) + 1;
-        $end = $this->pos_ + 1;
-        throw new SyntaxError(sprintf("SyntaxError @[%u:%u], token=`%s`: %s", $start, $end, $this->token_, $msg));
+        $e = new SyntaxError($msg);
+        $e->fillSourceLocation($this);
+        throw $e;
     }
 
 

@@ -12,7 +12,7 @@ class TimeField extends AbstractField
 {
     public function getLHS(): string
     {
-        return "time";
+        return "LogEntries.time";
     }
 
     public function getName(): string

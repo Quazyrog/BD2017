@@ -14,7 +14,7 @@ class ResponseBytesField extends NumericField
 
     function getLHS(): string
     {
-        return "responseBytes";
+        return "LogEntries.responseBytes";
     }
 
     function prepareRHS(string $rhs) : string
@@ -23,10 +23,17 @@ class ResponseBytesField extends NumericField
         $spl = $this->splitRHS_($rhs);
         if (!$spl[0])
             throw new SyntaxError($err_msg);
-        return strval($spl[0] * $this->getUnitMultiplicity($spl[1]));
+        return strval($spl[0] * $this->getUnitMultiplicity_($spl[1]));
     }
 
-    protected function getUnitMultiplicity($unit)
+    public function selectString(bool $aggreg)
+    {
+        if ($aggreg)
+            return "SUM(" . $this->getLHS() . ")";
+        return $this->getLHS();
+    }
+
+    protected function getUnitMultiplicity_($unit)
     {
         $err_msg = "Invalid size unit `" . $unit ."`; valid units: K, M, G, Ki, Mi, Gi";
         $base = 1000;

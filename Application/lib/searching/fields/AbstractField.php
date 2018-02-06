@@ -48,4 +48,11 @@ abstract class AbstractField
     public abstract function getStoreType(): int;
 
     public abstract function getStoredConversionString() : string;
+
+    public function selectString(bool $aggreg)
+    {
+        if (!$aggreg)
+            return $this->getLHS();
+        return false;
+    }
 }

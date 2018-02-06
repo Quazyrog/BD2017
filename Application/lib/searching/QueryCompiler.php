@@ -2,6 +2,7 @@
 
 namespace searching;
 
+use entities\Server;
 use searching\fields\AbstractField;
 use searching\fields\ResponseBytesField;
 use searching\fields\TimeField;
@@ -28,7 +29,19 @@ class QueryCompiler
     {
         $tokenizer = new Tokenizer($query);
         $tokenizer->next();
-        return $this->filterPartCompile_($tokenizer);
+
+        $filter = $this->filterPartCompile_($tokenizer);
+
+        $shown_fields = [];
+        foreach ($this->fields_ as $f) {
+            $fstr = $f->selectString(false);
+            if ($fstr)
+                $shown_fields[] = $fstr;
+        }
+
+        return "SELECT " . implode(",", $shown_fields) . " FROM LogEntries"
+            . " LEFT JOIN LogFiles ON LogEntries.uploadedFrom = LogFiles.id"
+            . " WHERE LogFiles.serverName=? AND (" . $filter . ")";
     }
 
     protected function filterPartCompile_(Tokenizer $tokenizer) : string
