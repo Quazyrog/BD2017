@@ -23,4 +23,11 @@ abstract class NumericField extends AbstractField
             throw new SyntaxError("Integral number expected, got `" . $rhs . "'");
         return $rhs;
     }
+
+    protected function selectString_(bool $aggreg)
+    {
+        if ($aggreg)
+            return "SUM(" . $this->getLHS() . ")";
+        return $this->getLHS();
+    }
 }
