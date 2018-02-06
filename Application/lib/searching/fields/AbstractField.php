@@ -15,6 +15,7 @@ abstract class AbstractField
 
     private  $isAggregationField_ = false;
     protected $database_;
+    protected $appliedFunctionName;
 
     public function __construct(\PDO $db)
     {
@@ -81,10 +82,23 @@ abstract class AbstractField
         $this->isAggregationField_ = $is_aggregation_field;
     }
 
-    public function applyFunction($function_name)
+    final public function applyFunction($function_name)
+    {
+        $this->applyFunction_($function_name);
+        $this->appliedFunctionName = $function_name;
+    }
+
+    protected function applyFunction_($function_name)
     {
         if ($function_name)
             throw new SyntaxError("Function `" . $function_name . "` cannot be applied to field" . "`"
                 . $this->getName() . "`");
+    }
+
+    final public function getDescription() : string
+    {
+        if ($this->appliedFunctionName)
+            return $this->appliedFunctionName . "(" . $this->getName() . ")";
+        return $this->getName();
     }
 }

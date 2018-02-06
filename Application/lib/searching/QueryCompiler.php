@@ -52,7 +52,7 @@ class QueryCompiler
         foreach ($this->fields_ as $f) {
             $fstr = $f->selectString($query->getGrouping());
             if ($fstr)
-                $shown_fields[] = $fstr;
+                $shown_fields[$f->getDescription()] = $fstr;
         }
         $query->setShownFields($shown_fields);
 

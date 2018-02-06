@@ -55,7 +55,7 @@ class RemoteAddressField extends AbstractField
         return "'" . $rhs . "'";
     }
 
-    public function applyFunction($function_name)
+    public function applyFunction_($function_name)
     {
         if (!$function_name) {
             $this->funmask = null;

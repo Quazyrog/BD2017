@@ -45,7 +45,7 @@ class TimeField extends AbstractField
         return "TIMESTAMP";
     }
 
-    public function applyFunction($function_name)
+    public function applyFunction_($function_name)
     {
         $this->fn = $function_name;
     }

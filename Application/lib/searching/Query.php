@@ -12,7 +12,11 @@ class Query
 
     public function __toString() : string
     {
-        $str = "SELECT " . implode(",", $this->shownFields_) . " FROM LogEntries"
+        $show = [];
+        foreach ($this->shownFields_ as $desc => $sel)
+            $show[] = $sel . ' AS "' . $desc . '"';
+
+        $str = "SELECT " . implode(",", $show) . " FROM LogEntries"
             . " LEFT JOIN LogFiles ON LogEntries.uploadedFrom = LogFiles.id"
             . " WHERE LogFiles.serverName=? AND (" . $this->filter_ . ")";
         if ($this->grouping_)
@@ -22,9 +26,9 @@ class Query
         return $str;
     }
 
-    public function getShownFields() : array
+    public function getShownNames() : array
     {
-        return $this->shownFields_;
+        return array_keys($this->shownFields_);
     }
 
     public function setShownFields(array $shown_fields): void
@@ -39,7 +43,7 @@ class Query
 
     public function setOrderField(string $order_field) : void
     {
-        if (!in_array($order_field, $this->shownFields_))
+        if (!isset($this->shownFields_[$order_field]))
             throw new \InvalidArgumentException("`" . $order_field . "` is not valid field");
         $this->orderField_ = $order_field;
     }
