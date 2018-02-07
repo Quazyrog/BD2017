@@ -6,6 +6,15 @@ require "../../../vendor/autoload.php";
 $foo = new class extends APIEndpoint {
     protected function main(array $args): bool
     {
+        if (!isset($args["servername"]))
+            return $this->message_("`servername` must be set");
+
+        $stm = $this->database->prepare("SELECT * FROM servers WHERE name=?");
+        $stm->execute([$args["servername"]]);
+        if ($stm->rowCount() != 1)
+            return $this->message_("Cannot retrieve server with given name");
+        $server = $stm->fetchObject(\entities\Server::class);
+
         $page = 0;
         if (isset($args["page"])) {
             if (!is_numeric($args["page"]))
@@ -24,7 +33,7 @@ $foo = new class extends APIEndpoint {
         }
 
         $stm = $this->database->prepare($stm_str);
-        $stm->execute([$_REQUEST["servername"]]);
+        $stm->execute([$server->getName()]);
         return $this->result_($stm->fetchAll(PDO::FETCH_ASSOC));
     }
 };
