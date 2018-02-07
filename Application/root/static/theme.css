@@ -1,0 +1,63 @@
+:root {
+    --background-bar: #3c3f41;
+    --background-dock: #3e434c;
+    --background-main: #3c3f41;
+    --background-edit: #2b2b2b;
+    --background-aside: #313335;
+
+    --shadow: rgba(0, 0, 0, 0.25);
+
+    --border: #595b5f;
+    --text: #cfd4dd;
+
+    --main-blue: #5493ac;
+    --main-green: #55aa7f;
+    --main-red: #d63e3e;
+}
+
+
+body {
+    background-color: var(--background-main);
+    color: var(--text);
+}
+
+input, button, textarea {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--background-edit);
+    padding: 1mm 2mm 1mm 2mm;
+}
+
+input:focus, button:focus, textarea:focus {
+    border: 1px solid var(--main-blue);
+}
+
+button:active {
+    border: 1px solid blue;
+}
+
+textarea {
+    font-family: monospace;
+}
+
+
+header{
+    background: var(--background-dock);
+}
+
+#menu_bar {
+    background: var(--background-dock);
+    box-shadow: 1.5mm 1.5mm 1mm var(--shadow);
+}
+
+#left_dock {
+    background: var(--background-dock);
+    box-shadow: 1.5mm 1.5mm 1mm var(--shadow);
+}
+
+#left_dock button {
+    margin: 1mm;
+    width: 34mm;
+    display: inline-block;
+    overflow: hidden;
+}

@@ -1,0 +1,102 @@
+:root {
+    --background-bar: #3c3f41;
+    --background-dock: #3e434c;
+    --background-main: #3c3f41;
+    --background-edit: #2b2b2b;
+    --background-aside: #313335;
+
+    --shadow: rgba(0, 0, 0, 0.25);
+
+    --border: #595b5f;
+
+    --main-blue: #5493ac;
+    --main-green: #55aa7f;
+    --main-red: #d63e3e;
+}
+
+
+.ServerNode {
+    width: 12cm;
+    height: 6cm;
+    background: var(--background-aside);
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 4px;
+    box-shadow: 1mm 1mm 0.5mm var(--shadow);
+    margin: 4mm;
+    display: inline-block;
+}
+
+.ServerNode.SelectedServer {
+    width: 12cm;
+    height: 6cm;
+    background: var(--background-aside);
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 2px;
+    border: 2px solid var(--main-blue);
+}
+
+.ServerLCol {
+    display: inline-block;
+    width: 45mm;
+    float: left;
+}
+
+.ServerIcon {
+    width: 4cm;
+}
+
+.ServerRCol {
+    display: inline-block;
+    width: 70mm;
+    float: right;
+}
+
+.ServerRCol span {
+    display: block;
+}
+
+.ServerRCol span.Label {
+    font-weight: bold;
+    font-size: 8pt;
+    margin-top: 1mm;
+}
+
+.ServerRCol .ServerHeader {
+    text-align: center;
+    font-weight: bold;
+    font-size: 16pt;
+    margin-bottom: 2mm;
+}
+
+.ServerRCol .ServerLogFormat {
+    font-family: monospace;
+}
+
+.ServerRCol .ServerDescription {
+    font-style: italic;
+    font-size: 10pt;
+}
+
+
+.Message {
+    width: 100%;
+    background: var(--background-aside);
+    box-sizing: border-box;
+    border-left: 1mm solid var(--border);
+}
+
+.Message.Error {
+    border-color: var(--main-red);
+}
+
+.Message.Success {
+    border-color: var(--main-green);
+}
+
+
+label {
+    display: block;
+    margin-bottom: 2mm;
+}

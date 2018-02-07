@@ -2,16 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="static/theme.css">
+    <link rel="stylesheet" href="static/layout.css">
+    <link rel="stylesheet" href="static/misc.css">
+    <script src="static/script.js"></script>
+    <script src="static/include/SimpleFormHandler.js"></script>
     <title>Loggit</title>
 </head>
 <body>
-<h1>Loggit</h1>
-<a href="AddServer.html">Add server >></a>
-<br>
-<a href="UploadLog.html">Upload >></a>
-<br>
-<a href="Search.html">Search logs >></a>
-<br>
-<a href="AddValuesList.html">Create list >></a>
+
+<header id="menu_bar" class="Widget">
+    <h1 id="server_header">No server</h1>
+</header>
+
+<section id="left_dock" class="Widget">
+    <button type="button" id="button_add_server">Add server</button>
+    <button type="button" id="button_select_server">Server selection</button>
+    <hr>
+</section>
+
+<section id="main">
+
+</section>
+
+
+<script>
+    var Controler;
+
+    (function () {
+        Controler = new UIControler();
+    })();
+</script>
+
 </body>
 </html>
